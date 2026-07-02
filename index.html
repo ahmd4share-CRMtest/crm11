@@ -1,101 +1,108 @@
 <!DOCTYPE html>
-<html dir="rtl">
+<html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ASGate - لوحة تحكم المبيعات</title>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;700;800&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
-    <link rel="stylesheet" href="main.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ASGate - العملاء</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="customers.css" />
 </head>
 <body>
+  <div class="page">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-logo">AS</div>
+        <div class="brand-text">
+          <h1>ASGate</h1>
+          <span>إدارة العملاء</span>
+        </div>
+      </div>
 
-<nav class="navbar">
-    <a href="index.html" class="active">الرئيسية</a>
-    <a href="visits.html">الزيارات</a>
-    <a href="opportunities.html">الفرص البيعية</a>
-    <a href="customers.html">العملاء</a>
-    <a href="sales.html">المبيعات</a>
-</nav>
+      <nav class="menu">
+        <a href="index.html" class="menu-item active">العملاء</a>
+        <a href="#" class="menu-item">الزيارات</a>
+        <a href="#" class="menu-item">الفرص البيعية</a>
+        <a href="#" class="menu-item">المبيعات</a>
+      </nav>
+    </aside>
 
-<div class="employee-info-bar">
-    <div class="info-content">
-        <div class="info-item">الموظف: <span>محمد المنصور</span></div>
-        <div class="info-item">الرقم: <span>ASG-2026</span></div>
-        <div class="info-item">المشروع: <span>ASGate</span></div>
-    </div>
-</div>
+    <main class="content">
+      <header class="topbar">
+        <div>
+          <h2>العملاء</h2>
+          <p>عرض وإدارة بيانات العملاء وسجل النشاط</p>
+        </div>
+        <div class="topbar-actions">
+          <button class="btn btn-primary" id="addCustomerBtn">+ إضافة عميل</button>
+        </div>
+      </header>
 
-<div class="container">
-    <div class="dashboard-grid">
-        <div class="right-section">
-            <div class="content-box">
-                <h3>📅 سجل الأهداف والزيارات (2026)</h3>
-                <table class="yearly-table">
-                    <thead>
-                        <tr>
-                            <th style="width: 22%;">الشهر</th>
-                            <th>هدف</th>
-                            <th>تم</th>
-                            <th class="thick-border">معلق</th>
-                            <th style="background:#eff6ff">زيارة</th>
-                            <th style="background:#f0fdf4">ناجحة</th>
-                        </tr>
-                    </thead>
-                    <tbody id="monthsBody"></tbody>
-                </table>
-            </div>
+      <section class="stats-grid">
+        <div class="stat-card">
+          <span>إجمالي العملاء</span>
+          <strong id="totalCustomers">0</strong>
+        </div>
+        <div class="stat-card">
+          <span>عملاء الشهر</span>
+          <strong id="monthCustomers">0</strong>
+        </div>
+        <div class="stat-card">
+          <span>عملاء اليوم</span>
+          <strong id="todayCustomers">0</strong>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <h3>قائمة العملاء</h3>
+          <input type="search" id="searchInput" class="search-input" placeholder="بحث باسم الشركة أو الكود..." />
         </div>
 
-        <div class="left-section">
-            <div class="filters-grid">
-                <div class="filter-card"><label>السنة</label><select class="filter-input"><option>2026</option><option>الكل</option></select></div>
-                <div class="filter-card"><label>الشهر</label><select class="filter-input"><option>الكل</option></select></div>
-                <div class="filter-card"><label>المنطقة</label><select class="filter-input"><option>الكل</option></select></div>
-                <div class="filter-card"><label>المشرف</label><select class="filter-input"><option>الكل</option></select></div>
-                <div class="filter-card"><label>المندوب</label><select class="filter-input"><option>الكل</option></select></div>
-            </div>
-            
-            <div class="stats-cards">
-                <div class="stat-card bg-blue"><div class="label-text">الهدف السنوي</div><div class="value-text">180,000</div></div>
-                <div class="stat-card bg-green"><div class="label-text">المبيعات</div><div class="value-text" id="salesValue">14,210</div></div>
-                <div class="stat-card bg-yellow"><div class="label-text">المعلق</div><div class="value-text">790</div></div>
-                <div class="stat-card bg-purple" style="flex:0.6"><div class="label-text">الزيارات</div><div class="value-text" id="visitCount">0</div></div>
-                <div class="stat-card bg-orange" style="flex:0.6"><div class="label-text">الفرص</div><div class="value-text" id="oppCount">0</div></div>
-            </div>
-
-            <div class="content-box">
-                <h3>📈 تحليل الأداء الإجمالي</h3>
-                <div class="charts-row">
-                    <div class="chart-item-wrapper">
-                        <div class="chart-container-reduced"><canvas id="achievedChart"></canvas><div class="chart-percentage">82%</div></div>
-                        <div class="chart-label">المحقق</div>
-                    </div>
-                    <div class="chart-item-wrapper" style="flex: 0.6;">
-                        <div class="gauge-container-reduced"><canvas id="gaugeChart"></canvas><div class="gauge-value">200%</div></div>
-                        <div class="chart-label" style="margin-top: 25px;">مؤشر الإنجاز</div>
-                    </div>
-                    <div class="chart-item-wrapper">
-                        <div class="chart-container-reduced"><canvas id="pendingChart"></canvas><div class="chart-percentage">18%</div></div>
-                        <div class="chart-label">المعلق</div>
-                    </div>
-                </div>
-            </div>
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>كود العميل</th>
+                <th>اسم الشركة</th>
+                <th>العنوان</th>
+                <th>المسؤول الرئيسي / المفوض</th>
+                <th>رقم التواصل</th>
+                <th>البريد الإلكتروني</th>
+                <th>تاريخ الإنشاء</th>
+                <th>تصنيف العميل</th>
+                <th>الملاحظات</th>
+                <th>حالة العميل</th>
+                <th>المالك</th>
+              </tr>
+            </thead>
+            <tbody id="tableBody"></tbody>
+          </table>
         </div>
-    </div>
+      </section>
 
-    <div class="content-box staff-performance-section">
-        <h3>👥 أداء فريق المبيعات (30 موظفاً)</h3>
-        <div style="flex-grow: 1; position: relative; margin-top: 10px;">
-            <canvas id="staffChart"></canvas>
+      <section class="panel">
+        <div class="panel-head">
+          <h3>سجل نشاط العملاء</h3>
         </div>
-    </div>
-</div>
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>التاريخ</th>
+                <th>العميل</th>
+                <th>النشاط</th>
+                <th>الملاحظات</th>
+              </tr>
+            </thead>
+            <tbody id="logsBody"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
 
-<script src="main.js"></script>
-
+  <script src="customers.js"></script>
 </body>
 </html>
-
