@@ -20,6 +20,10 @@ function normalizeText(v) {
   return String(v || '').toLowerCase().trim();
 }
 
+function safe(value, fallback = '-') {
+  return value && String(value).trim() ? value : fallback;
+}
+
 function badgeClass(status) {
   const s = normalizeText(status);
   if (s.includes('جديد') || s.includes('مفتوح')) return 'info';
@@ -27,10 +31,6 @@ function badgeClass(status) {
   if (s.includes('متابعة')) return 'warning';
   if (s.includes('مغلق') || s.includes('ملغي')) return 'danger';
   return 'info';
-}
-
-function safe(value, fallback = '-') {
-  return value && String(value).trim() ? value : fallback;
 }
 
 function getDisplayManager(v) {
@@ -50,8 +50,8 @@ function getDisplayEmail(v) {
 
 function renderCustomers(list) {
   if (!tableBody) return;
-
   tableBody.innerHTML = '';
+
   if (!list.length) {
     tableBody.innerHTML = `
       <tr>
@@ -82,8 +82,8 @@ function renderCustomers(list) {
 
 function renderLogs(list) {
   if (!logsBody) return;
-
   logsBody.innerHTML = '';
+
   if (!list.length) {
     logsBody.innerHTML = `
       <tr>
@@ -109,7 +109,6 @@ function updateStats(list) {
   const now = new Date();
   const thisMonth = now.getMonth();
   const thisYear = now.getFullYear();
-  const today = now.toISOString().slice(0, 10);
 
   totalCustomers.textContent = list.length;
 
@@ -119,14 +118,18 @@ function updateStats(list) {
   }).length;
 
   todayCustomers.textContent = list.filter(v => {
-    const d = String(v.creationDate || v.date || '');
-    return d.includes(today) || d.includes(`${now.getDate()}`) || d.includes(`${now.getMonth() + 1}`);
+    const d = new Date(v.creationDate || v.date || '');
+    return !isNaN(d) &&
+      d.getDate() === now.getDate() &&
+      d.getMonth() === now.getMonth() &&
+      d.getFullYear() === now.getFullYear();
   }).length;
 }
 
 function applyFilter() {
   const customers = getCustomers();
   const q = normalizeText(searchInput.value);
+
   const filtered = customers.filter(v => {
     const haystack = [
       v.code, v.comp, v.address, v.city, v.mgr, v.delegateName,
@@ -145,9 +148,7 @@ function init() {
   renderCustomers(customers);
   renderLogs(getLogs());
 
-  if (searchInput) {
-    searchInput.addEventListener('input', applyFilter);
-  }
+  if (searchInput) searchInput.addEventListener('input', applyFilter);
 }
 
 document.addEventListener('DOMContentLoaded', init);
